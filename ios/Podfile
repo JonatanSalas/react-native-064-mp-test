@@ -1,0 +1,35 @@
+plugin 'cocoapods-user-defined-build-types'
+
+enable_user_defined_build_types!
+
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+platform :ios, '10.0'
+
+target 'TestMP' do
+  config = use_native_modules!
+
+  pod 'MercadoPagoSDK', :build_type => :dynamic_framework
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # to enable hermes on iOS, change `false` to `true` and then install pods
+    :hermes_enabled => false
+  )
+
+  target 'TestMPTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+
+  # Enables Flipper.
+  #
+  # Note that if you have use_frameworks! enabled, Flipper will not work and
+  # you should disable the next line.
+  # use_flipper!()
+
+  post_install do |installer|
+    react_native_post_install(installer)
+  end
+end
